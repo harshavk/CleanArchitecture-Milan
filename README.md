@@ -13,13 +13,13 @@ A pragmatic Clean Architecture starter for **.NET 10**. Batteries included, opin
 - **Infrastructure** layer with:
   - JWT authentication with **refresh tokens** (with token rotation)
   - Permission-based authorization
-  - EF Core + PostgreSQL (snake_case naming, migrations)
+  - EF Core + SQL Server (migrations)
   - **HybridCache** for fast, unified caching with cache invalidation
   - Serilog structured logging
 - **Web.Api** layer with:
   - Minimal API endpoints
   - **Rate limiting** (configurable global + authentication policies)
-  - **OpenTelemetry** tracing and metrics (ASP.NET Core, HTTP, Npgsql, runtime)
+  - **OpenTelemetry** tracing and metrics (ASP.NET Core, HTTP, SqlClient, runtime)
   - Global exception handling and `ProblemDetails`
   - Swagger / OpenAPI with JWT support
 - **Seq** for searching and analyzing structured logs
@@ -32,11 +32,11 @@ A pragmatic Clean Architecture starter for **.NET 10**. Batteries included, opin
 ## Getting started
 
 ```bash
-docker compose up -d        # PostgreSQL + Seq
+docker compose up -d        # SQL Server + Seq
 dotnet run --project src/Web.Api
 ```
 
-Run the full test suite (the integration tests spin up a throwaway PostgreSQL container, so
+Run the full test suite (the integration tests spin up a throwaway SQL Server container, so
 Docker must be running):
 
 ```bash
