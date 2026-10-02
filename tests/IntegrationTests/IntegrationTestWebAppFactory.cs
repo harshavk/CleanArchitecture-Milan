@@ -1,24 +1,27 @@
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Testcontainers.PostgreSql;
+using Testcontainers.MsSql;
 using Web.Api;
 
 namespace IntegrationTests;
 
 public sealed class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:17")
-        .WithDatabase("clean-architecture")
-        .WithUsername("postgres")
-        .WithPassword("postgres")
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
+        .WithPassword("Your_strong_Passw0rd")
         .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseSetting("ConnectionStrings:Database", _dbContainer.GetConnectionString());
+        var connectionString = new SqlConnectionStringBuilder(_dbContainer.GetConnectionString())
+        {
+            InitialCatalog = "clean-architecture"
+        };
+        builder.UseSetting("ConnectionStrings:Database", connectionString.ConnectionString);
 
         // Provide deterministic JWT settings so tokens can be issued and validated in tests.
         builder.UseSetting("Jwt:Secret", "super-duper-secret-value-that-should-be-in-user-secrets");
