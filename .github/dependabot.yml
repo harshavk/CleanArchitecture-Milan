@@ -4,3 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    groups:
+      # Bump Microsoft/EF Core packages together; updating them one at a time
+      # causes NU1605 package-downgrade errors between siblings.
+      microsoft:
+        patterns:
+          - "Microsoft.*"
